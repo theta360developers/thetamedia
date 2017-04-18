@@ -1,4 +1,4 @@
-= http://theta360developers.github.io/[Unofficial Guides]
+= THETA Media Unofficial Guide
 :icons: font
 :toc: right
 :toclevels: 1
@@ -16,8 +16,6 @@ ga('send', 'pageview');
 ga('set', 'contentGroup1', 'All RICOH');
 </script>
 ++++
-
-= THETA Media
 
 This document is being created to replace the
 http://theta360.guide/community-document/community.html[Unofficial Media Guide].
