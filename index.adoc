@@ -54,3 +54,7 @@ include::overview.adoc[]
 // begin metadata section
 
 include::metadata.adoc[]
+
+include::format.adoc[]
+
+include::platform.adoc[]

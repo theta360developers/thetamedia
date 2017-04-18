@@ -1,0 +1,9 @@
+== Format
+dual-fisheye
+
+=== Stitching
+Equirectangular.
+
+RICOH THETA lens distortion data.
+
+Sony PlayStation VR Media Player

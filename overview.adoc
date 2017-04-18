@@ -6,7 +6,7 @@ For information on streaming 360 video from the THETA, see the
 http://theta360.guide/community-document/live-streaming.html[Live Streaming Guide].
 
 The video is a standard MP4 file. The image is a standard JPEG file. You can
-use standard tools like Photoshop, Premiere Pro, Paint to edit both the
+use tools like Photoshop, Premiere Pro, Paint to edit both the
 images and the videos.
 
 The THETA has two lenses. Each lens captures half of a spheres. The two
