@@ -19,6 +19,10 @@ ga('set', 'contentGroup1', 'All RICOH');
 
 = THETA Media
 
+This document is being created to replace the
+http://theta360.guide/community-document/community.html[Unofficial Media Guide].
+At the time of writing, the THETA S is the newest model.
+
 Post comments and corrections to <http://lists.theta360.guide> in a public
 category or direct message
 http://lists.theta360.guide/users/jcasman/[@jcasman] or
