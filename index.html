@@ -745,7 +745,7 @@ p { margin-bottom: 1.25rem; }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
-<body class="book toc2 toc-right">
+<body class="article toc2 toc-right">
 <div id="header">
 <h1>THETA Media Unofficial Guide</h1>
 <div id="toc" class="toc2">
@@ -753,9 +753,11 @@ p { margin-bottom: 1.25rem; }
 <ul class="sectlevel1">
 <li><a href="#_resources">1. Resources</a></li>
 <li><a href="#_overview">2. Overview</a></li>
-<li><a href="#_metadata">3. metadata</a></li>
-<li><a href="#_format">4. Format</a></li>
-<li><a href="#_platforms">5. Platforms</a></li>
+<li><a href="#_resize">3. Resize</a></li>
+<li><a href="#_color">4. Color</a></li>
+<li><a href="#_metadata">5. metadata</a></li>
+<li><a href="#_format">6. Format</a></li>
+<li><a href="#_platforms">7. Platforms</a></li>
 </ul>
 </div>
 </div>
@@ -882,7 +884,136 @@ will take media in equirectangular format and enable navigation.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_metadata">3. metadata</h2>
+<h2 id="_resize">3. Resize</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can resize your image as long as it is in ratio of 2:1.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/originalSize.png" alt="originalSize">
+</div>
+<div class="title">Figure 4. original image dimensions</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/filesize.png" alt="filesize">
+</div>
+<div class="title">Figure 5. original file size</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/originalFacebook.png" alt="originalFacebook">
+</div>
+<div class="title">Figure 6. original image on Facebook</div>
+</div>
+<div class="paragraph">
+<p>In the example below, I&#8217;m using the Linux utility to
+<a href="https://www.imagemagick.org">ImageMagick</a>
+to resize the image to a low resolution of 800x400.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ convert original.jpg -resize 800x400 resized.jpg</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I&#8217;ll verify that the file size was reduced from 3.8M to 0.2M.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ ll
+-rw-r--r-- 1 craig craig 3820013 Oct 23  2016 original.jpg
+-rw-r--r-- 1 craig craig  205001 Jun  1 13:51 resized.jpg
+$</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+In the example above, I&#8217;ve aliased <code>ls -l</code> to <code>ll</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/resizeFacebook.png" alt="resizeFacebook">
+</div>
+<div class="title">Figure 7. resized low-res image on Facebook</div>
+</div>
+<div class="paragraph">
+<p>Navigation works in the resized image.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/resizeFacebook.png" alt="resizeFacebook">
+</div>
+<div class="title">Figure 8. navigation works in resized image</div>
+</div>
+<div class="paragraph">
+<p>I&#8217;m using
+<a href="http://www.sno.phy.queensu.ca/~phil/exiftool/">exiftool</a> to verify the dimensions of the file.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ exiftool resized.jpg |grep 'Image Size'
+Image Size                      : 800x400</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_color">4. Color</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can apply color transformations to the THETA image and retain the
+360 features.</p>
+</div>
+<div class="paragraph">
+<p>In this example, I&#8217;m using ImageMagick from the command line to
+change the image into a black and white 360 image.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ convert original.jpg -colorspace Gray  -emboss 0x.5  gray.jpg</pre>
+</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/grayFacebook.png" alt="grayFacebook">
+</div>
+<div class="title">Figure 9. gray filter applied</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/grayFacebook2.png" alt="grayFacebook2">
+</div>
+<div class="title">Figure 10. 360 navigations works after changing color</div>
+</div>
+<div class="paragraph">
+<p>This example shows a command line sketch transformation applied to the 360 image.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/sketch2.png" alt="sketch2">
+</div>
+<div class="title">Figure 11. pencil sketch applied to THETA image</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/resize/sketch.png" alt="sketch">
+</div>
+<div class="title">Figure 12. navigation works with pencil sketch</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metadata">5. metadata</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To handle orientation (top/bottom correction), the RICOH THETA also adds
@@ -915,7 +1046,7 @@ official application and edited in other tools such as those
 <div class="content">
 <img src="img/metadata/exif-data.png" alt="exif data">
 </div>
-<div class="title">Figure 4. metadata viewed with ExifToolGUI</div>
+<div class="title">Figure 13. metadata viewed with ExifToolGUI</div>
 </div>
 <div class="paragraph">
 <p>You can immediately see useful data in the metadata tags. Many sites, including
@@ -945,7 +1076,7 @@ check for this ratio in case the image was edited incorrectly in post-processing
 <div class="content">
 <img src="img/metadata/xmp_data.png" alt="xmp data">
 </div>
-<div class="title">Figure 5. Exciting THETA XMP Data</div>
+<div class="title">Figure 14. Exciting THETA XMP Data</div>
 </div>
 <div class="paragraph">
 <p>For starters, you can check for the <strong>ProjectionType</strong> of <strong>equirectangular</strong>.
@@ -1003,7 +1134,7 @@ now add XMP data into the JPEG image. This can be used with tools like Adobe Pho
 <div class="content">
 <img src="img/metadata/xmp_theta_app.png" alt="xmp theta app">
 </div>
-<div class="title">Figure 6. Official THETA Desktop Application saving XMP data</div>
+<div class="title">Figure 15. Official THETA Desktop Application saving XMP data</div>
 </div>
 <div class="paragraph">
 <p>After the correction, the XMP data for pitch and roll will be zeroed out.</p>
@@ -1012,7 +1143,7 @@ now add XMP data into the JPEG image. This can be used with tools like Adobe Pho
 <div class="content">
 <img src="img/metadata/zero-out.png" alt="zero out">
 </div>
-<div class="title">Figure 7. Pitch and Roll are zeroed out by the THETA app</div>
+<div class="title">Figure 16. Pitch and Roll are zeroed out by the THETA app</div>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1029,7 +1160,7 @@ to all images.
 </table>
 </div>
 <div class="sect2">
-<h3 id="_libraries">3.1. Libraries</h3>
+<h3 id="_libraries">5.1. Libraries</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1046,7 +1177,7 @@ A fast EXIF data extractor for .NET by Simon McKenzie</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_end_user_tools">3.2. End User Tools</h3>
+<h3 id="_end_user_tools">5.2. End User Tools</h3>
 <div class="paragraph">
 <p>These tools are for digital artists and support the XMP tags. Many other tools
 support the metadata tags.</p>
@@ -1065,13 +1196,13 @@ support the metadata tags.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_format">4. Format</h2>
+<h2 id="_format">6. Format</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>dual-fisheye</p>
 </div>
 <div class="sect2">
-<h3 id="_stitching">4.1. Stitching</h3>
+<h3 id="_stitching">6.1. Stitching</h3>
 <div class="paragraph">
 <p>Equirectangular.</p>
 </div>
@@ -1085,22 +1216,22 @@ support the metadata tags.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_platforms">5. Platforms</h2>
+<h2 id="_platforms">7. Platforms</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_aframe">5.1. aframe</h3>
+<h3 id="_aframe">7.1. aframe</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_google_vr">5.2. Google VR</h3>
+<h3 id="_google_vr">7.2. Google VR</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_unity">5.3. Unity</h3>
+<h3 id="_unity">7.3. Unity</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_web_sites">5.4. Web sites</h3>
+<h3 id="_web_sites">7.4. Web sites</h3>
 
 </div>
 </div>
@@ -1108,7 +1239,7 @@ support the metadata tags.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-04-18 16:27:27 PDT
+Last updated 2017-06-01 14:24:02 PDT
 </div>
 </div>
 </body>

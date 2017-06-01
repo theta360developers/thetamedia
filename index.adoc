@@ -53,6 +53,10 @@ https://developers.google.com/streetview/open-spherical-camera/[Open Spherical C
 
 include::overview.adoc[]
 
+include::resize.adoc[]
+
+include::color.adoc[]
+
 // begin metadata section
 
 include::metadata.adoc[]
