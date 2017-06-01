@@ -61,6 +61,10 @@ include::color.adoc[]
 
 include::metadata.adoc[]
 
-include::format.adoc[]
+include::specification.adoc[]
+
+include::sampleApp.adoc[]
+
+include::povray.adoc[]
 
 include::platform.adoc[]

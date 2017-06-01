@@ -27,7 +27,7 @@ image::img/resize/resizeFacebook.png[role="thumb" title="resized low-res image o
 
 Navigation works in the resized image.
 
-image::img/resize/resizeFacebook.png[role="thumb" title="navigation works in resized image"]
+image::img/resize/facebookNav.png[role="thumb" title="navigation works in resized image"]
 
 I'm using
 http://www.sno.phy.queensu.ca/~phil/exiftool/[exiftool] to verify the dimensions of the file.

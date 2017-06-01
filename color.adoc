@@ -36,5 +36,10 @@ In this example, I'm applying a photo texture with this graphic.
 
 image::img/color/texture_fabric.gif[role="thumb" title="fabric texture tile applied to THETA image"]
 
+The resized image retains 360 navigation.
 
 image::img/color/fabric.png[role="thumb" title="THETA image with texture effect"]
+
+Here's what the images look like on Facebook.
+
+image::img/color/colortests.png[role="thumb" title="360 image color tests"]

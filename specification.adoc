@@ -5,3 +5,13 @@ and 2048x1024. The application you build can also resize the images
 to any width and height that is in a 2:1 ratio.
 
 NOTE: The image must be in a ratio of 2:1.
+
+
+dual-fisheye
+
+=== Stitching
+Equirectangular.
+
+RICOH THETA lens distortion data.
+
+Sony PlayStation VR Media Player
