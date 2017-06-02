@@ -57,7 +57,8 @@ installed on OSX using tools such as homebrew. I lack a MS Windows system,
 but the script should be easily adjusted to cover similar functionality.
 
 === Code
-
+[source, bash, linenums]
+----
   #!/bin/bash
   #
   # Automatically levels Theta S spherical images
@@ -122,6 +123,7 @@ but the script should be easily adjusted to cover similar functionality.
   # remove temporary files / clean up
   rm tmp.jpg
   rm tmp.pov
+----
 
 === Explanation
 This section added by Craig.

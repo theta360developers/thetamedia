@@ -277,9 +277,17 @@ This is the metadata in my data.txt file
 === Grab XMP Data with Node
 
 ==== Script
-
+[source, javascript, linenums]
+----
   var im = require('imagemagick');
-  im.identify('original.jpg', function(err, metadata) {
+  var filename = process.argv.slice(2)[0];
+
+  if (filename === undefined) {
+    console.log('\n    usage: node nodeMagick.js image\n');
+  } else {
+
+  console.log(filename);
+  im.identify(filename, function(err, metadata) {
     if (err) throw err;
     var filtered = {}
     var data = metadata.properties
@@ -289,9 +297,12 @@ This is the metadata in my data.txt file
     console.log(filtered);
   })
 
+}
+----
+
 ==== Output
 
-  $ node nodeMagick.js
+  $ node nodeMagick.js original.jpg
   { 'gpano:croppedareaimageheightpixels': '2688',
     'gpano:croppedareaimagewidthpixels': '5376',
     'gpano:croppedarealeftpixels': '0',
