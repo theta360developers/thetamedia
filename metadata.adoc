@@ -274,8 +274,38 @@ This is the metadata in my data.txt file
           1 image files updated
 
 
+=== Grab XMP Data with Node
 
-=== Zero Out XMP Data with Desktop Application
+==== Script
+
+  var im = require('imagemagick');
+  im.identify('original.jpg', function(err, metadata) {
+    if (err) throw err;
+    var filtered = {}
+    var data = metadata.properties
+    for (key in data) {
+      if (key.match(/^gpano/)) filtered[key] = data[key];
+    }
+    console.log(filtered);
+  })
+
+==== Output
+
+  $ node nodeMagick.js
+  { 'gpano:croppedareaimageheightpixels': '2688',
+    'gpano:croppedareaimagewidthpixels': '5376',
+    'gpano:croppedarealeftpixels': '0',
+    'gpano:croppedareatoppixels': '0',
+    'gpano:fullpanoheightpixels': '2688',
+    'gpano:fullpanowidthpixels': '5376',
+    'gpano:poseheadingdegrees': '180.0',
+    'gpano:posepitchdegrees': '2.8',
+    'gpano:poserolldegrees': '-0.3',
+    'gpano:projectiontype': 'equirectangular',
+    'gpano:usepanoramaviewer': 'True' }
+
+
+=== Zero Out XMP Data with THETA Desktop Application
 
 The THETA desktop application can be used to zero out the pitch and roll so that
 your image editing application does not get confused. Problems occur
@@ -299,7 +329,7 @@ to all images.
 * http://www.exiv2.org/[Exiv2]: C++ metadata library and tools by Andreas Huggel
 * https://www.codeproject.com/Articles/36342/ExifLib-A-Fast-Exif-Data-Extractor-for-NET[ExifLib] -
 A fast EXIF data extractor for .NET by Simon McKenzie
-
+* https://www.npmjs.com/package/imagemagick[Imagemagick module for Noe]
 
 
 ### End User Tools

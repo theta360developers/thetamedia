@@ -1,0 +1,923 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?asciidoc-toc maxdepth="1"?>
+<?asciidoc-numbered?>
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xl="http://www.w3.org/1999/xlink" version="5.0" xml:lang="en">
+<info>
+<title>THETA Media Unofficial Guide</title>
+<date>2017-06-01</date>
+</info>
+<simpara>This document is being created to replace the
+<link xl:href="http://theta360.guide/community-document/community.html">Unofficial Media Guide</link>.
+At the time of writing, the THETA S is the newest model.</simpara>
+<simpara>Post comments and corrections to <link xl:href="http://lists.theta360.guide">http://lists.theta360.guide</link> in a public
+category or direct message
+<link xl:href="http://lists.theta360.guide/users/jcasman/">@jcasman</link> or
+<link xl:href="http://lists.theta360.guide/users/codetricity">@craig</link> on the lists system.
+You must be logged in to send a message.</simpara>
+<simpara>This is an unofficial, community-generated guide for developing applications
+that use 360 media from RICOH THETA cameras.
+This is not authorized by RICOH and is based on publicly available information.</simpara>
+<simpara>Get the latest news and updates on Twitter
+<emphasis role="strong"><link xl:href="https://twitter.com/theta360dev">@theta360dev</link></emphasis></simpara>
+<section xml:id="_resources">
+<title>Resources</title>
+<section xml:id="_official_information">
+<title>Official Information</title>
+<itemizedlist>
+<listitem>
+<simpara><link xl:href="https://developers.theta360.com/en/docs/v2.1/api_reference/">RICOH THETA API v2.1 reference</link>,
+compliant with
+<link xl:href="https://developers.google.com/streetview/open-spherical-camera/">Open Spherical Camera API level 2</link> from Google.</simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="https://developers.theta360.com/en/forums/">THETA Developers Official Forum</link></simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="https://developers.theta360.com/en/docs/sdk/">Official SDK</link></simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="https://theta360.com/en/support/download/">Windows, Mac, iOS, Android apps</link></simpara>
+</listitem>
+</itemizedlist>
+</section>
+<section xml:id="_unofficial_information">
+<title>Unofficial Information</title>
+<itemizedlist>
+<listitem>
+<simpara><link xl:href="http://theta360.guide/community-document/live-streaming.html">Live Streaming Guide</link></simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="http://lists.theta360.guide/">Community Discussion</link></simpara>
+</listitem>
+</itemizedlist>
+</section>
+</section>
+<section xml:id="_overview">
+<title>Overview</title>
+<simpara>This document focuses on still images and videos that are saved to the internal storage
+of the camera and transferred to a mobile phone, computer, or device such as
+the <link xl:href="http://lists.theta360.guide/t/new-sony-playstation-vr-integration-with-ricoh-theta/691?u=codetricity">Sony PlayStation VR</link>.
+For information on streaming 360 video from the THETA, see the
+<link xl:href="http://theta360.guide/community-document/live-streaming.html">Live Streaming Guide</link>.</simpara>
+<simpara>The video is a standard MP4 file. The image is a standard JPEG file. You can
+use tools like Photoshop, Premiere Pro, Paint to edit both the
+images and the videos.</simpara>
+<simpara>The THETA has two lenses. Each lens captures half of a spheres. The two
+spheres are placed side by side on media internal to the camera. This image
+or video is referred to as dual-fisheye.</simpara>
+<figure role="thumb">
+<title>dual-fisheye format</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/overview/dual_fish_eye.png"/>
+</imageobject>
+<textobject><phrase>dual fish eye</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>Normally, you won&#8217;t see or deal with media in dual-fisheye format. You will
+usually deal with media in equirectangular format.</simpara>
+<figure role="thumb">
+<title>equirectangular format</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/overview/equirectangular_video.png"/>
+</imageobject>
+<textobject><phrase>equirectangular video</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>360 players, such as the RICOH player, YouTube, Facebook, or a VR headset
+will take media in equirectangular format and enable navigation.</simpara>
+<figure role="thumb">
+<title>THETA media in 360 player</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/overview/viewer.png"/>
+</imageobject>
+<textobject><phrase>viewer</phrase></textobject>
+</mediaobject>
+</figure>
+</section>
+<section xml:id="_resize">
+<title>Resize</title>
+<simpara>You can resize your image as long as it is in ratio of 2:1.</simpara>
+<figure role="thumb">
+<title>original image dimensions</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/resize/originalSize.png"/>
+</imageobject>
+<textobject><phrase>originalSize</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>original file size</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/resize/filesize.png"/>
+</imageobject>
+<textobject><phrase>filesize</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>original image on Facebook</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/resize/originalFacebook.png"/>
+</imageobject>
+<textobject><phrase>originalFacebook</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>In the example below, I&#8217;m using the Linux utility to
+<link xl:href="https://www.imagemagick.org">ImageMagick</link>
+to resize the image to a low resolution of 800x400.</simpara>
+<literallayout class="monospaced">$ convert original.jpg -resize 800x400 resized.jpg</literallayout>
+<simpara>I&#8217;ll verify that the file size was reduced from 3.8M to 0.2M.</simpara>
+<literallayout class="monospaced">$ ll
+-rw-r--r-- 1 craig craig 3820013 Oct 23  2016 original.jpg
+-rw-r--r-- 1 craig craig  205001 Jun  1 13:51 resized.jpg
+$</literallayout>
+<tip>
+<simpara>In the example above, I&#8217;ve aliased <literal>ls -l</literal> to <literal>ll</literal>.</simpara>
+</tip>
+<figure role="thumb">
+<title>resized low-res image on Facebook</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/resize/resizeFacebook.png"/>
+</imageobject>
+<textobject><phrase>resizeFacebook</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>Navigation works in the resized image.</simpara>
+<figure role="thumb">
+<title>navigation works in resized image</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/resize/facebookNav.png"/>
+</imageobject>
+<textobject><phrase>facebookNav</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>I&#8217;m using
+<link xl:href="http://www.sno.phy.queensu.ca/~phil/exiftool/">exiftool</link> to verify the dimensions of the file.</simpara>
+<literallayout class="monospaced">$ exiftool resized.jpg |grep 'Image Size'
+Image Size                      : 800x400</literallayout>
+</section>
+<section xml:id="_color">
+<title>Color</title>
+<simpara>You can apply color transformations to the THETA image and retain the
+360 features.</simpara>
+<simpara>In this example, I&#8217;m using ImageMagick from the command line to
+change the image into a black and white 360 image.</simpara>
+<literallayout class="monospaced">$ convert original.jpg -colorspace Gray  -emboss 0x.5  gray.jpg</literallayout>
+<figure role="thumb">
+<title>gray filter applied</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/color/grayFacebook.png"/>
+</imageobject>
+<textobject><phrase>grayFacebook</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>360 navigations works after changing color</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/color/grayFacebook2.png"/>
+</imageobject>
+<textobject><phrase>grayFacebook2</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>This example shows a command line sketch transformation applied to the 360 image.</simpara>
+<figure role="thumb">
+<title>pencil sketch applied to THETA image</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/color/sketch2.png"/>
+</imageobject>
+<textobject><phrase>sketch2</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>navigation works with pencil sketch</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/color/sketch.png"/>
+</imageobject>
+<textobject><phrase>sketch</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>The actual command is somewhat complex, but you can just copy the command
+and replace the file name.</simpara>
+<simpara>First make a pencil tile. You just need to do this once to generate
+a small tile for the pencil.</simpara>
+<literallayout class="monospaced">convert -size 256x256 xc:  +noise Random  -virtual-pixel tile  -motion-blur 0x20+135 -charcoal 1 -resize 50% pencil_tile.gif</literallayout>
+<simpara>Then apply the command below.</simpara>
+<literallayout class="monospaced">convert original.jpg -colorspace gray \( +clone -tile pencil_tile.gif -draw "color 0,0 reset" +clone +swap -compose color_dodge -composite \) -fx 'u*.2+v*.8' sketch.jpg</literallayout>
+<simpara>In this example, I&#8217;m applying a photo texture with this graphic.</simpara>
+<figure role="thumb">
+<title>fabric texture tile applied to THETA image</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/color/texture_fabric.gif"/>
+</imageobject>
+<textobject><phrase>texture fabric</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>The resized image retains 360 navigation.</simpara>
+<figure role="thumb">
+<title>THETA image with texture effect</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/color/fabric.png"/>
+</imageobject>
+<textobject><phrase>fabric</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>Here&#8217;s what the images look like on Facebook.</simpara>
+<figure role="thumb">
+<title>360 image color tests</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/color/colortests.png"/>
+</imageobject>
+<textobject><phrase>colortests</phrase></textobject>
+</mediaobject>
+</figure>
+</section>
+<section xml:id="_metadata">
+<title>metadata</title>
+<simpara>RICOH THETA images have
+<link xl:href="https://en.wikipedia.org/wiki/Exif">EXIF</link> and
+<link xl:href="https://developers.google.com/streetview/spherical-metadata">XMP</link>
+metadata embedded into the image files</simpara>
+<section xml:id="_what_is_metadata">
+<title>What is Metadata?</title>
+<simpara>360 images have hidden text embedded into the image data.
+This data is called metadata. It is not designed for humans. A computer reads in the metadata.</simpara>
+<simpara><link xl:href="https://developers.google.com/streetview/spherical-metadata">Photo Sphere XMP Metadata</link>
+is a Google standard taken from the Adobe XMP standard. You can edit this data with an image
+editor or a text editor. Most 360 image viewers such as Facebook will support XMP data.
+As 360 images are still new, not all applications support XMP data.
+If the application does not
+support XMP data, you will need to edit the entire image with something
+link
+<link xl:href="http://lists.theta360.guide/t/hugin-howto-adjust-theta-image-tilt-and-centering/1270">Hugin</link>
+or Photoshop.</simpara>
+</section>
+<section xml:id="_why_use_xmp_data">
+<title>Why Use XMP Data?</title>
+<simpara>Editing the XMP data uses less CPU and memory resources. Your application can
+change the text string for orientation with
+almost no delay for the user of your application. Editing the entire image
+orientation with image editing techniques is going to place a heavy load on
+the mobile or desktop application.</simpara>
+</section>
+<section xml:id="_what_can_you_edit">
+<title>What Can You Edit?</title>
+<simpara>You can edit both the XMP data embedded in the THETA image as well as add new
+XMP data tags that comply to the Photo Sphere XMP Metadata standard.
+For example, your application can add GPS data as well as initial view data
+to the image. The data can then be used by 360 viewing applications
+such as Facebook.</simpara>
+</section>
+<section xml:id="_overview_of_functionality_using_facebook_as_viewer">
+<title>Overview of Functionality using Facebook as Viewer</title>
+<simpara>This is the same image shown on Facebook with no mouse editing. The
+orientation was changed by only using XMP data strings.</simpara>
+<section xml:id="_default_view_of_image_before_editing">
+<title>Default View of Image Before Editing</title>
+<simpara>The original image looks like this on Facebook with no editing.
+Although Facebook allows you to set the orientation with their Facebook app,
+let&#8217;s imagine that you&#8217;re building a better Facebook or building a new
+application to support XMP data. Imagine that the mouse is not there.</simpara>
+<figure role="thumb">
+<title>default starting view</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/default.jpg"/>
+</imageobject>
+<textobject><phrase>default</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>This is the default XMP data that we&#8217;ll edit for our tests.</simpara>
+<literallayout class="monospaced">&lt;GPano:PosePitchDegrees&gt;-0.9&lt;/GPano:PosePitchDegrees&gt;
+&lt;GPano:PoseRollDegrees&gt;-0.4&lt;/GPano:PoseRollDegrees&gt;</literallayout>
+<simpara><?asciidoc-hr?></simpara>
+</section>
+<section xml:id="_pose_pitch_increased_by_180_degrees">
+<title>Pose Pitch Increased by 180 Degrees</title>
+<simpara>Here, I&#8217;ll increase the PosePitchDegrees by 180 degrees to illustrate the
+orientation change. Image the camera is upside and you need to correct the image orientation.</simpara>
+<figure role="thumb">
+<title>pitch rotated 180 degrees</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/pitch180.jpg"/>
+</imageobject>
+<textobject><phrase>pitch180</phrase></textobject>
+</mediaobject>
+</figure>
+<literallayout class="monospaced">&lt;GPano:PosePitchDegrees&gt;179.1&lt;/GPano:PosePitchDegrees&gt;
+&lt;GPano:PoseRollDegrees&gt;-0.4&lt;/GPano:PoseRollDegrees&gt;</literallayout>
+</section>
+<section xml:id="_pose_roll_increased_by_180_degrees">
+<title>Pose Roll Increased by 180 Degrees</title>
+<simpara>In the next example, I&#8217;ve increased the Roll by 180 and reset the Pitch to the default value.
+image::img/metadata/roll180.jpg[role="thumb" title="roll rotated 180 degrees"]</simpara>
+<literallayout class="monospaced">&lt;GPano:PosePitchDegrees&gt;-0.9&lt;/GPano:PosePitchDegrees&gt;
+&lt;GPano:PoseRollDegrees&gt;179.6&lt;/GPano:PoseRollDegrees&gt;</literallayout>
+</section>
+<section xml:id="_initialviewheadingdegrees_decreased_by_180">
+<title>InitialViewHeadingDegrees Decreased by 180</title>
+<simpara>In the next example, I&#8217;ve added a new metadata tag for <emphasis>InitialViewHeadingDegrees</emphasis>.
+I got the name of the tag from the XMP standard. I&#8217;ve rotated the orientation
+by 180 degrees to show the back of the image sphere.</simpara>
+<figure role="thumb">
+<title>initial view heading rotated 180 degrees</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/heading180.png"/>
+</imageobject>
+<textobject><phrase>heading180</phrase></textobject>
+</mediaobject>
+</figure>
+<literallayout class="monospaced">&lt;GPano:PosePitchDegrees&gt;-0.9&lt;/GPano:PosePitchDegrees&gt;
+&lt;GPano:PoseRollDegrees&gt;-0.4&lt;/GPano:PoseRollDegrees&gt;
+&lt;GPano:InitialViewHeadingDegrees&gt;135&lt;/GPano:InitialViewHeadingDegrees&gt;</literallayout>
+</section>
+</section>
+<section xml:id="_metadata_tools">
+<title>Metadata Tools</title>
+<simpara>There are a number of free tools and libraries to access the metadata.</simpara>
+<itemizedlist>
+<listitem>
+<simpara><link xl:href="http://www.sno.phy.queensu.ca/~phil/exiftool/">ExifTool by Phil Harvey</link></simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="http://u88.n24.queensu.ca/~bogdan/">ExifToolGUI</link></simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="https://www.thexifer.net/">the eXif.er</link></simpara>
+</listitem>
+</itemizedlist>
+<figure role="thumb">
+<title>ExifToolGUI</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/exifgui.jpg"/>
+</imageobject>
+<textobject><phrase>exifgui</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>metadata viewed with ExifToolGUI</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/exif-data.png"/>
+</imageobject>
+<textobject><phrase>exif data</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>You can immediately see useful data in the metadata tags. Many sites, including
+Facebook will
+<link xl:href="https://facebook360.fb.com/editing-360-photos-injecting-metadata/">look</link>
+for a <emphasis role="strong">Make</emphasis> of <emphasis role="strong">RICOH</emphasis> and a <emphasis role="strong">Model</emphasis> of <emphasis role="strong">RICOH THETA S</emphasis>. You can
+use the metadata <emphasis role="strong">Make</emphasis> and <emphasis role="strong">Model</emphasis> to see if the image file your
+application is opening is a 360 image.</simpara>
+<important>
+<simpara>The THETA image must also be in a ratio of 2:1. Your application should
+check for this ratio in case the image was edited incorrectly in post-processing.</simpara>
+</important>
+<simpara>Clicking on the Xmp tab, we&#8217;ll now get to the real exciting data.</simpara>
+<figure role="thumb">
+<title>Exciting THETA XMP Data</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/xmp_data.png"/>
+</imageobject>
+<textobject><phrase>xmp data</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>For starters, you can check for the <emphasis role="strong">ProjectionType</emphasis> of <emphasis role="strong">equirectangular</emphasis>.
+Your application can easily identify an equirectangular image this way.</simpara>
+<simpara>Below this, you can see the <emphasis role="strong">PoseHeadingDegrees</emphasis>, <emphasis role="strong">PosePitchDegrees</emphasis>, and
+<emphasis role="strong">PoseRollDegrees</emphasis>. The THETA camera has internal sensors to get the
+heading, pitch and roll.</simpara>
+<caution>
+<simpara>The user of your application may have edited the image and deleted
+the metadata from the image. The solution is to review their post-processing
+workflow and then inspect the metadata manually or your application can check it.</simpara>
+</caution>
+<simpara>Metadata can be injected into a 360 image that has lost the data by graphic
+editing tools. Programming libraries can do this, or you can use exiftool
+in a script.</simpara>
+<literallayout class="monospaced">exiftool -ProjectionType="equirectangular" photo.jpg</literallayout>
+<simpara>Here&#8217;s an
+<link xl:href="http://lists.theta360.guide/t/getting-360-images-to-work-after-resize-exif-technique/1066">article</link>
+on getting the images to work after resizing the image by
+copying the original XMP data and copying over the resized image.</simpara>
+</section>
+<section xml:id="_edit_xmp_data_in_text_file">
+<title>Edit XMP Data In Text File</title>
+<figure role="thumb">
+<title>Use ExifToolGui to export XMP data as a text file</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/exportXmp.png"/>
+</imageobject>
+<textobject><phrase>exportXmp</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>XMP data can be edited in a text editor like Atom</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/atomXmp.png"/>
+</imageobject>
+<textobject><phrase>atomXmp</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>Import XMP data into THETA image. With the THETA image you want to edit
+selected, copy metadata from single file.</simpara>
+<figure role="thumb">
+<title>Using ExifToolGui, copy metadata from single file into image</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/copyMetadata.png"/>
+</imageobject>
+<textobject><phrase>copyMetadata</phrase></textobject>
+</mediaobject>
+</figure>
+</section>
+<section xml:id="_exiftool_from_command_line">
+<title>Exiftool from command line</title>
+<simpara>You can read and edit the XMP data directly from the command line. In the
+examples below, I&#8217;m using a bash shell on Windows. Many people use
+a bash script to control exiftool</simpara>
+<section xml:id="_reading_data">
+<title>Reading Data</title>
+<literallayout class="monospaced">$ ./exiftool.exe edited_image.jpg &gt; data.txt
+$ less data.txt</literallayout>
+<simpara>This is the metadata in my data.txt file</simpara>
+<literallayout class="monospaced">ExifTool Version Number         : 10.47
+File Name                       : edited_image.jpg
+Directory                       : .
+File Size                       : 3.7 MB
+File Modification Date/Time     : 2017:05:31 12:44:39-07:00
+File Access Date/Time           : 2017:05:31 12:44:39-07:00
+File Creation Date/Time         : 2017:05:31 11:31:21-07:00
+File Permissions                : rw-rw-rw-
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+Exif Byte Order                 : Big-endian (Motorola, MM)
+Image Description               :
+Make                            : RICOH
+Camera Model Name               : RICOH THETA S
+Orientation                     : Horizontal (normal)
+X Resolution                    : 72
+Y Resolution                    : 72
+Resolution Unit                 : inches
+Software                        : RICOH THETA S Ver 1.62
+Modify Date                     : 2016:10:23 12:25:33
+Y Cb Cr Positioning             : Co-sited
+Copyright                       :
+Exposure Time                   : 1/125
+F Number                        : 2.0
+ISO                             : 100
+Sensitivity Type                : Standard Output Sensitivity
+Exif Version                    : 0230
+Date/Time Original              : 2016:10:23 12:25:33
+Create Date                     : 2016:10:23 12:25:33
+Components Configuration        : Y, Cb, Cr, -
+Compressed Bits Per Pixel       : 3.2
+Aperture Value                  : 2.0
+Brightness Value                : 3.5
+Exposure Compensation           : -0.7
+Max Aperture Value              : 2.0
+Metering Mode                   : Multi-segment
+Light Source                    : Unknown
+Flash                           : No Flash
+Focal Length                    : 1.3 mm
+Maker Note Type                 : Rdc
+Firmware Version                : 1.62
+Serial Number                   : (00000000)00010093
+Recording Format                : JPEG
+Accelerometer                   : 359.6 -0.9
+Compass                         : 315
+Time Zone                       : -07:00
+Exposure Program                : Auto
+White Balance                   : Auto
+User Comment                    :
+Flashpix Version                : 0100
+Color Space                     : sRGB
+Exif Image Width                : 5376
+Exif Image Height               : 2688
+Interoperability Index          : R98 - DCF basic file (sRGB)
+Interoperability Version        : 0100
+Exposure Mode                   : Auto
+Scene Capture Type              : Standard
+Sharpness                       : Normal
+GPS Version ID                  : 2.3.0.0
+GPS Latitude Ref                : North
+GPS Longitude Ref               : West
+GPS Altitude Ref                : Above Sea Level
+GPS Time Stamp                  : 19:25:31
+GPS Img Direction Ref           : True North
+GPS Img Direction               : 315
+GPS Map Datum                   : WGS84
+GPS Date Stamp                  : 2016:10:23
+Compression                     : JPEG (old-style)
+Thumbnail Offset                : 58496
+Thumbnail Length                : 3118
+XMP Toolkit                     : Image::ExifTool 10.47
+Cropped Area Image Height Pixels: 2688
+Cropped Area Image Width Pixels : 5376
+Cropped Area Left Pixels        : 0
+Cropped Area Top Pixels         : 0
+Full Pano Height Pixels         : 2688
+Full Pano Width Pixels          : 5376
+Initial View Heading Degrees    : 135
+Pose Heading Degrees            : 315.0
+Pose Pitch Degrees              : -0.9
+Pose Roll Degrees               : -0.4
+Projection Type                 : equirectangular
+Use Panorama Viewer             : True
+Image Width                     : 5376
+Image Height                    : 2688
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:2 (2 1)
+Aperture                        : 2.0
+GPS Altitude                    : 36 m Above Sea Level
+GPS Date/Time                   : 2016:10:23 19:25:31Z
+GPS Latitude                    : 37 deg 25' 58.58" N
+GPS Longitude                   : 122 deg 10' 14.32" W
+GPS Position                    : 37 deg 25' 58.58" N, 122 deg 10' 14.32" W
+Image Size                      : 5376x2688
+Megapixels                      : 14.5
+Ricoh Pitch                     : -0.9
+Ricoh Roll                      : -0.399999999999977
+Shutter Speed                   : 1/125
+Thumbnail Image                 : (Binary data 3118 bytes, use -b option to extract)
+Focal Length                    : 1.3 mm
+Light Value                     : 9.0</literallayout>
+</section>
+</section>
+<section xml:id="_writing_data">
+<title>Writing Data</title>
+<literallayout class="monospaced">$ ./exiftool.exe -InitialViewHeadingDegrees=45 edited_image.jpg
+    1 image files updated</literallayout>
+</section>
+<section xml:id="_zero_out_xmp_data_with_desktop_application">
+<title>Zero Out XMP Data with Desktop Application</title>
+<simpara>The THETA desktop application can be used to zero out the pitch and roll so that
+your image editing application does not get confused. Problems occur
+when the entire image is edited with an image editor and then an application like
+Google Street View applies the XMP pitch and roll correction on top of the
+editing.</simpara>
+<figure role="thumb">
+<title>Official THETA Desktop Application saving XMP data</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/xmp_theta_app.png"/>
+</imageobject>
+<textobject><phrase>xmp theta app</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>After the correction, the XMP data for pitch and roll will be zeroed out.</simpara>
+<figure role="thumb">
+<title>Pitch and Roll are zeroed out by the THETA app</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/metadata/zero-out.png"/>
+</imageobject>
+<textobject><phrase>zero out</phrase></textobject>
+</mediaobject>
+</figure>
+<important>
+<simpara>The orientation of images on an application like Google Streetview will be incorrect
+if the user applied correction to some images and not others. They need to apply the adjustment
+to all images.</simpara>
+</important>
+</section>
+<section xml:id="_libraries">
+<title>Libraries</title>
+<itemizedlist>
+<listitem>
+<simpara><link xl:href="https://github.com/mayanklahiri/easyexif">easyexif</link>: C++ EXIF parsing library by <link xl:href="http://lahiri.me/">Mayank Lahiri</link></simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="http://www.exiv2.org/">Exiv2</link>: C++ metadata library and tools by Andreas Huggel</simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="https://www.codeproject.com/Articles/36342/ExifLib-A-Fast-Exif-Data-Extractor-for-NET">ExifLib</link> -
+A fast EXIF data extractor for .NET by Simon McKenzie</simpara>
+</listitem>
+</itemizedlist>
+</section>
+<section xml:id="_end_user_tools">
+<title>End User Tools</title>
+<simpara>These tools are for digital artists and support the XMP tags. Many other tools
+support the metadata tags.</simpara>
+<itemizedlist>
+<listitem>
+<simpara><link xl:href="http://www.flamingpear.com/flexify-2.html">Flexify 2</link> Photoshop plug-in</simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="https://helpx.adobe.com/premiere-pro/how-to/vr-video.html">Adobe Premiere Pro with VR support</link></simpara>
+</listitem>
+</itemizedlist>
+</section>
+</section>
+<section xml:id="_specification">
+<title>Specification</title>
+<simpara>The RICOH THETA S and THETA SC take images in two different sizes: 5376x2688
+and 2048x1024. The application you build can also resize the images
+to any width and height that is in a 2:1 ratio.</simpara>
+<note>
+<simpara>The image must be in a ratio of 2:1.</simpara>
+</note>
+<simpara>dual-fisheye</simpara>
+<section xml:id="_stitching">
+<title>Stitching</title>
+<simpara>Equirectangular.</simpara>
+<simpara>RICOH THETA lens distortion data.</simpara>
+<simpara>Sony PlayStation VR Media Player</simpara>
+</section>
+</section>
+<section xml:id="_sample_application">
+<title>Sample Application</title>
+<simpara>The sample application
+<link xl:href="https://github.com/khufkens/theta_rectify">theta_rectify</link> and
+<link xl:href="http://lists.theta360.guide/t/theta-s-auto-level-bash-script/1257">post</link>
+ were contributed to the
+community by
+<link xl:href="http://www.khufkens.com/">Dr. Koen Hufkens</link>
+of Harvard University.</simpara>
+<simpara>My <link xl:href="http://virtualforest.io">Virtual Forest</link> project is
+still running strong and generates tons of spherical images
+(currently ~50GB). However, the post on which the camera sits is
+not perfectly level.  The Theta S camera normally compensates
+for this using an internal gyroscope which detects pitch and
+roll of the camera.  Yet, when downloading images directly from the
+camera no adjustments are made and the pitch and roll data is
+merely recorded in the EXIF data of the image.</simpara>
+<simpara>As such I wrote a small bash script which rectifies (levels the horizon) in Theta S
+spherical images using this internal EXIF data. This is an alternative
+implementation to the
+<link xl:href="https://github.com/regen100/thetaexif">THETA EXIF Library</link> by
+<link xl:href="https://github.com/regen100">Regen</link>. I use his cute Lama test images for
+reference. All credit for the funky images go to Regen. Below is the quick
+install guide to using my script. I hope it helps speed up people&#8217;s
+Theta S workflow.</simpara>
+<section xml:id="_install">
+<title>Install</title>
+<simpara>Download, fork or copy paste the script from
+<link xl:href="https://github.com/khufkens/theta_rectify">my github repository</link> to your machine
+and make it executable.</simpara>
+<literallayout class="monospaced">$ chmod +x theta_rectify.sh</literallayout>
+</section>
+<section xml:id="_use">
+<title>Use</title>
+<literallayout class="monospaced">$ theta_rectify.sh image.jpg</literallayout>
+<simpara>The above command will rectify the image.jpg file and output a new file called image_rectified.jpg.</simpara>
+<figure role="thumb">
+<title>Original Image</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/sampleapp/original.jpg"/>
+</imageobject>
+<textobject><phrase>original</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>rectified image</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/sampleapp/rectified.jpg"/>
+</imageobject>
+<textobject><phrase>rectified</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>Visual comparison between my results and those of
+<link xl:href="http://www.regentechlog.com/2014/06/26/python-thetaexif/">Regen&#8217;s python script</link>
+show good correspondence.</simpara>
+</section>
+<section xml:id="_requirements">
+<title>Requirements</title>
+<simpara>The script depends on a running copy of exiftools, imagemagick and POVRay.
+These tools are commonly available in most Linux distros, and can be
+installed on OSX using tools such as homebrew. I lack a MS Windows system,
+but the script should be easily adjusted to cover similar functionality.</simpara>
+</section>
+<section xml:id="_code">
+<title>Code</title>
+<literallayout class="monospaced">#!/bin/bash
+#
+# Automatically levels Theta S spherical images
+# depends on exiftools / imagemagick and POVRay
+# Should work on most Linux installs and on
+# OSX using homebrew installs or similar</literallayout>
+<literallayout class="monospaced"># get the filename without the extension
+noextension=`echo $1 | sed 's/\(.*\)\..*/\1/'`</literallayout>
+<literallayout class="monospaced"># grab the width and height of the images
+height=`exiftool $1 | grep "^Image Height" | cut -d':' -f2 | sed 's/ //g'`
+width=`exiftool $1 | grep "^Image Width" | cut -d':' -f2 | sed 's/ //g'`</literallayout>
+<literallayout class="monospaced"># grab pitch roll
+roll=`exiftool $1 | grep "Roll" | cut -d':' -f2 | sed 's/ //g'`
+pitch=`exiftool $1 | grep "Pitch" | cut -d':' -f2 | sed 's/ //g'`
+pitch=$(bc &lt;&lt;&lt; "$pitch * -1")</literallayout>
+<literallayout class="monospaced"># flip the image horizontally
+convert -flop $1 tmp.jpg</literallayout>
+<literallayout class="monospaced"># create povray script with correct image parameters
+cat &lt;&lt;EOF &gt; tmp.pov
+// Equirectangular Panorama Render
+// bare bones script
+// camera settings
+camera {
+  spherical // equirectangular projection
+  up    y * 1
+  right  x * image_width / image_height
+  location &lt;0,0,0&gt;     // put camera at origin
+  angle 360 180        // full image
+  rotate x * 0         // Tilt up (+) or down (-)
+  rotate y * -90         // Look left (+) or right (-)
+  rotate z * 0         // Rotate CCW (+) or CW (-)
+}
+// create a sphere shape
+sphere {
+  // center of sphere
+  &lt;0,0,0&gt;, 1
+  texture {
+    pigment {
+      image_map {
+        jpeg "tmp.jpg"
+        interpolate 2 // smooth it
+        once   // don't tile image, just one copy
+        map_type 1
+      }
+    }
+    rotate x * $roll   //Tilt up (+) or down (-) or PITCH
+    rotate y * 0       //shift left (+) or right (-)
+    rotate z * $pitch  //Rotate CCW (+) or CW (-) or ROLL
+    finish { ambient 1 }
+  }
+}
+EOF</literallayout>
+<literallayout class="monospaced"># execute povray script and rename file
+povray +W$width +H$height -D +fj tmp.pov +O${noextension}_rectified.jpg</literallayout>
+<literallayout class="monospaced"># remove temporary files / clean up
+rm tmp.jpg
+rm tmp.pov</literallayout>
+</section>
+<section xml:id="_explanation">
+<title>Explanation</title>
+<simpara>This section added by Craig.</simpara>
+<simpara>exiftool pulls the orientation from the XMP data. To get the Roll, grep
+for the Roll.</simpara>
+<literallayout class="monospaced">$ exiftool original.jpg |grep Roll
+Pose Roll Degrees               : -0.3
+Ricoh Roll                      : -0.300000000000011</literallayout>
+<simpara>Same for pitch.</simpara>
+<literallayout class="monospaced">$ exiftool original.jpg |grep "Pitch"
+Pose Pitch Degrees              : 2.8
+Ricoh Pitch                     : 2.8</literallayout>
+<simpara>This line uses ImageMagick to flip the image horizontally.</simpara>
+<literallayout class="monospaced">convert -flop $1 tmp.jpg</literallayout>
+<simpara>In this section, Koen creates a Povray file.</simpara>
+<literallayout class="monospaced"># create povray script with correct image parameters
+cat &lt;&lt;EOF &gt; tmp.pov
+// Equirectangular Panorama Render
+// bare bones script</literallayout>
+<simpara>The Povray configuration file is covered in this
+<link xl:href="http://www.povray.org/documentation/3.7.0/t2_2.html#t2_2">documentation</link>.</simpara>
+<simpara>The main section of the documentation is below.</simpara>
+<literallayout class="monospaced">camera {
+  location &lt;0, 2, -3&gt;
+  look_at  &lt;0, 1,  2&gt;
+}</literallayout>
+<simpara>The camera statement describes where and how the camera sees the scene.
+It gives x-, y- and z-coordinates. location &lt;0,2,-3&gt; places the camera
+up two units and back three units from the center of the ray-tracing
+universe which is at &lt;0,0,0&gt;. By default +z is into the screen
+and -z is back out of the screen.</simpara>
+<simpara>look_at &lt;0,1,2&gt; rotates the camera to point at the coordinates &lt;0,1,2&gt;.
+A point 1 unit up from the origin and 2 units away from the origin.
+This makes it 5 units in front of and 1 unit lower than the camera.
+The look_at point should be the center of attention of our image.</simpara>
+<literallayout class="monospaced">sphere {
+  &lt;0, 1, 2&gt;, 2
+  texture {
+    pigment { color Yellow }
+  }
+}</literallayout>
+<simpara>The first vector specifies the center of the sphere. In this example
+the x coordinate is zero so it is centered left and right. It is also at y=1
+or one unit up from the origin. The z coordinate is 2 which is five units
+in front of the camera, which is at z=-3. After the center vector is
+a comma followed by the radius which in this case is two units.
+Since the radius is half the width of a sphere, the sphere is
+four units wide.</simpara>
+</section>
+</section>
+<section xml:id="_povray">
+<title>Povray</title>
+<simpara>This shows image adjustment with Povray.</simpara>
+<section xml:id="__pov_configuration_file">
+<title>.pov configuration file</title>
+<literallayout class="monospaced">#include "colors.inc"
+#include "shapes.inc"</literallayout>
+<literallayout class="monospaced">camera {
+spherical
+}</literallayout>
+<literallayout class="monospaced">sphere {
+  // center of sphere
+  &lt;0,0,0&gt;, 1
+  texture {
+    pigment {
+      image_map {
+        jpeg "museum.jpg"
+        interpolate 2
+        once
+        map_type 1</literallayout>
+<literallayout class="monospaced">    }
+   }
+   rotate z * 90
+   // rotate x * 90
+   finish { ambient 1}
+}
+}</literallayout>
+</section>
+<section xml:id="_command_line">
+<title>command line</title>
+<literallayout class="monospaced">$ povray +W5376 +H2688 +fj  thetasphere.pov +Othetaspherez90.jpg</literallayout>
+<figure role="thumb">
+<title>original image</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/povray/original.jpg"/>
+</imageobject>
+<textobject><phrase>original</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>x rotated 90 degrees</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/povray/x90.jpg"/>
+</imageobject>
+<textobject><phrase>x90</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>view in THETA desktop app with x rotation</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/povray/x90view.png"/>
+</imageobject>
+<textobject><phrase>x90view</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>z rotated 90 degrees</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/povray/z90.jpg"/>
+</imageobject>
+<textobject><phrase>z90</phrase></textobject>
+</mediaobject>
+</figure>
+<figure role="thumb">
+<title>view in THETA desktop app with z rotation</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="img/povray/z90view.png"/>
+</imageobject>
+<textobject><phrase>z90view</phrase></textobject>
+</mediaobject>
+</figure>
+</section>
+</section>
+<section xml:id="_platforms">
+<title>Platforms</title>
+<section xml:id="_aframe">
+<title>aframe</title>
+
+</section>
+<section xml:id="_google_vr">
+<title>Google VR</title>
+
+</section>
+<section xml:id="_unity">
+<title>Unity</title>
+
+</section>
+<section xml:id="_web_sites">
+<title>Web sites</title>
+
+</section>
+</section>
+</article>
