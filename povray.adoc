@@ -1,8 +1,22 @@
-== Povray
+=== Povray
 
-This shows image adjustment with Povray.
+This shows image adjustment by wrapping the THETA
+equirectangular image around a sphere in Povray
+and then rotating the sphere.
 
-=== .pov configuration file
+CAUTION: This will delete your XMP data and you may lose 360 navigation.
+You may need to inject the ProjectionType metadata back into your image.
+
+Povray is a command line tool that is intended to be used within a
+bash script. Alternately, if you're writing your own application, it
+may help you to understand the concept of rotating a sphere to make the
+proper image adjustment.
+
+Povray reads in a configuration file. The file below specifies a
+spherical camera and a texture for the sphere that is an equirectangular
+image.
+
+==== .pov configuration file
 
   #include "colors.inc"
   #include "shapes.inc"
@@ -30,7 +44,10 @@ This shows image adjustment with Povray.
     }
     }
 
-=== command line
+==== command line
+
+The configuration file above is used by povray on the command line
+to output a new file.
 
   $ povray +W5376 +H2688 +fj  thetasphere.pov +Othetaspherez90.jpg
 
@@ -43,3 +60,7 @@ image::img/povray/x90view.png[role="thumb" title="view in THETA desktop app with
 image::img/povray/z90.jpg[role="thumb" title="z rotated 90 degrees"]
 
 image::img/povray/z90view.png[role="thumb" title="view in THETA desktop app with z rotation"]
+
+IMPORTANT: Depending on your application, you may need to inject metadata tags
+back into the image that you output with povray. At a minium, you should set
+ProjectionType to equirectangular.

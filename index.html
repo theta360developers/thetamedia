@@ -846,11 +846,10 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_overview">2. Overview</a></li>
 <li><a href="#_resize">3. Resize</a></li>
 <li><a href="#_color">4. Color</a></li>
-<li><a href="#_metadata">5. metadata</a></li>
-<li><a href="#_specification">6. Specification</a></li>
-<li><a href="#_sample_application">7. Sample Application</a></li>
-<li><a href="#_povray">8. Povray</a></li>
-<li><a href="#_platforms">9. Platforms</a></li>
+<li><a href="#_orientation_and_tilt">5. Orientation and Tilt</a></li>
+<li><a href="#_crop">6. Crop</a></li>
+<li><a href="#_metadata">7. metadata</a></li>
+<li><a href="#_sample_application">8. Sample Application</a></li>
 </ul>
 </div>
 </div>
@@ -1154,7 +1153,537 @@ a small tile for the pencil.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_metadata">5. metadata</h2>
+<h2 id="_orientation_and_tilt">5. Orientation and Tilt</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The THETA camera contains a gyroscope and compass to determine the position
+of the camera. The camera orientation is saved as metadata into the image.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/orientation/sideways.jpg" alt="sideways">
+</div>
+<div class="title">Figure 16. Camera saves orientation data to image</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/orientation/sideEqui.png" alt="sideEqui">
+</div>
+<div class="title">Figure 17. Image is sideways</div>
+</div>
+<div class="paragraph">
+<p>Examining the XMP data with exiftool shows the pitch and roll.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ exiftool filename.jpg
+Pose Pitch Degrees              : -12.1
+Pose Roll Degrees               : 92.4</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When I upload the image to Facebook, the Facebook application reads in
+the XMP data and automatically puts the image in the proper orientation.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/orientation/sidewaysFacebook.png" alt="sidewaysFacebook">
+</div>
+<div class="title">Figure 18. Facebook automatically corrects orientation</div>
+</div>
+<div class="paragraph">
+<p>If your application does not automatically adjust the image
+orientation based on the camera orientation, you may want to edit the orientation
+manually. I&#8217;ll cover two examples. Povray and Hugin.</p>
+</div>
+<div class="paragraph">
+<p>By rolling the x axis back by -92.4 degrees, I can display the image upright.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/orientation/correctedCrop.jpg" alt="correctedCrop">
+</div>
+<div class="title">Figure 19. corrected with Povray</div>
+</div>
+<div class="paragraph">
+<p>By using Povray, I&#8217;ve deleted my XMP data and have lost 360 navigation.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/orientation/fbNoXmp.png" alt="fbNoXmp">
+</div>
+<div class="title">Figure 20. Facebook with no XMP data</div>
+</div>
+<div class="paragraph">
+<p>If I set ProjectionType to equirectangular, the image will regain 360 navigation
+on Facebook.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ exiftool -ProjectionType=equirectangular sidewaysCorrected.jpg
+    1 image files updated</pre>
+</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/orientation/fbWithXmp.png" alt="fbWithXmp">
+</div>
+<div class="title">Figure 21. Facebook with after XMP data injection</div>
+</div>
+<div class="paragraph">
+<p>I noticed that povray also flipped my image horizontally. I&#8217;m going to flip it back.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ convert -flop sidewaysCorrected.jpg flipped.jpg</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I&#8217;m now going to confirm that the XMP data was retained.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ exiftool flipped.jpg |grep Projection
+Projection Type                 : equirectangular</pre>
+</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/orientation/flippedImage.png" alt="flippedImage">
+</div>
+<div class="title">Figure 22. Flipped image retains 360 navigation</div>
+</div>
+<div class="paragraph">
+<p>Now that you have the basics of XMP data and pitch and roll orientation data, let&#8217;s
+have some fun with povray.</p>
+</div>
+<div class="sect2">
+<h3 id="_povray">5.1. Povray</h3>
+<div class="paragraph">
+<p>This shows image adjustment by wrapping the THETA
+equirectangular image around a sphere in Povray
+and then rotating the sphere.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This will delete your XMP data and you may lose 360 navigation.
+You may need to inject the ProjectionType metadata back into your image.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Povray is a command line tool that is intended to be used within a
+bash script. Alternately, if you&#8217;re writing your own application, it
+may help you to understand the concept of rotating a sphere to make the
+proper image adjustment.</p>
+</div>
+<div class="paragraph">
+<p>Povray reads in a configuration file. The file below specifies a
+spherical camera and a texture for the sphere that is an equirectangular
+image.</p>
+</div>
+<div class="sect3">
+<h4 id="__pov_configuration_file">5.1.1. .pov configuration file</h4>
+<div class="literalblock">
+<div class="content">
+<pre>#include "colors.inc"
+#include "shapes.inc"</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>camera {
+spherical
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sphere {
+  // center of sphere
+  &lt;0,0,0&gt;, 1
+  texture {
+    pigment {
+      image_map {
+        jpeg "museum.jpg"
+        interpolate 2
+        once
+        map_type 1</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    }
+   }
+   rotate z * 90
+   // rotate x * 90
+   finish { ambient 1}
+}
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_command_line">5.1.2. command line</h4>
+<div class="paragraph">
+<p>The configuration file above is used by povray on the command line
+to output a new file.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ povray +W5376 +H2688 +fj  thetasphere.pov +Othetaspherez90.jpg</pre>
+</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/povray/original.jpg" alt="original">
+</div>
+<div class="title">Figure 23. original image</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/povray/x90.jpg" alt="x90">
+</div>
+<div class="title">Figure 24. x rotated 90 degrees</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/povray/x90view.png" alt="x90view">
+</div>
+<div class="title">Figure 25. view in THETA desktop app with x rotation</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/povray/z90.jpg" alt="z90">
+</div>
+<div class="title">Figure 26. z rotated 90 degrees</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/povray/z90view.png" alt="z90view">
+</div>
+<div class="title">Figure 27. view in THETA desktop app with z rotation</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Depending on your application, you may need to inject metadata tags
+back into the image that you output with povray. At a minium, you should set
+ProjectionType to equirectangular.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hugin">5.2. Hugin</h3>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/centered.jpg" alt="centered">
+</div>
+<div class="title">Figure 28. hugin can be used to adjust 360 images</div>
+</div>
+<div class="paragraph">
+<p>There are many ways to fix the tilt of a 360 image. Photoshop can adjust orientation with
+<a href="http://lists.theta360.guide/t/tutorial-using-photoshop-to-resize-brighten-change-orientation-of-theta-images/1079">offset adjustment</a>.
+<a href="http://lists.theta360.guide/t/using-360-image-as-flat-image-with-affinity-photo/1249">Affinity Photo</a>
+is also popular. If your viewer supports XMP data, you can edit
+the <a href="http://lists.theta360.guide/t/getting-360-images-to-work-after-resize-exif-technique/1066">metadata</a>.
+For example, in Facebook and most social media applications, simply drag
+the default orientation with your mouse.</p>
+</div>
+<div class="paragraph">
+<p>I will show you a technique to use Hugin. It&#8217;s not necessarily a best
+practice as it&#8217;s a bit cumbersome. However, this technique may have a
+place in your toolbox if your viewer does not support XMP data. This technique
+works with any application, even applications that do not support pitch,
+yaw, and roll adjustments with XMP data.</p>
+</div>
+<div class="sect3">
+<h4 id="_starting_position_of_theta_image_before_editing">5.2.1. Starting position of THETA image before editing</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/starting.jpg" alt="starting">
+</div>
+<div class="title">Figure 29. image starting position</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_starting_position_of_theta_image_after_editing">5.2.2. Starting position of THETA image after editing</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/startEdit.jpg" alt="startEdit">
+</div>
+<div class="title">Figure 30. image starting position after editing</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_facebook_starting_position">5.2.3. Facebook Starting Position</h4>
+<div class="paragraph">
+<p>To save you time, I&#8217;ll repeat that you don&#8217;t need this technique if your
+application is uploading a 360 image to Facebook or most social media sites.
+Facebook adjusts the XMP data using your mouse to set the default image.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/fbStart.jpg" alt="fbStart">
+</div>
+<div class="title">Figure 31. Facebook default start</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_social_media_apps_have_easy_mouse_adjustment">5.2.4. Social Media Apps Have Easy Mouse Adjustment</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/fbEdit.jpg" alt="fbEdit">
+</div>
+<div class="title">Figure 32. Drag to edit position on Facebook</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_start_hugin">5.2.5. Start Hugin</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginStart.png" alt="huginStart">
+</div>
+<div class="title">Figure 33. Start Hugin</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_drag_theta_image_onto_sphere">5.2.6. Drag THETA Image Onto Sphere</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginDrag.jpg" alt="huginDrag">
+</div>
+<div class="title">Figure 34. Drag your THETA image onto Hugin</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_switch_to_move_drag_view">5.2.7. Switch to Move/Drag View</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginMove.jpg" alt="huginMove">
+</div>
+<div class="title">Figure 35. Switch to Move/Drag View</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_left_mouse_on_sphere">5.2.8. Left Mouse On Sphere</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginMouse.jpg" alt="huginMouse">
+</div>
+<div class="title">Figure 36. Move sphere with mouse</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_change_default_image_format_to_jpeg">5.2.9. Change Default Image Format to JPEG</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginPref.png" alt="huginPref">
+</div>
+<div class="title">Figure 37. Hugin preferences</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginFile.png" alt="huginFile">
+</div>
+<div class="title">Figure 38. Hugin default file</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The THETA application can only read in JPEG format files.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_save_hugin_as_pto_file">5.2.10. Save Hugin as *.pto file</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginPto.png" alt="huginPto">
+</div>
+<div class="title">Figure 39. Save Hugin project</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_select_batch_processing_tool">5.2.11. Select Batch Processing Tool</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginBatch.png" alt="huginBatch">
+</div>
+<div class="title">Figure 40. Start Hugin batch processing tool</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginBatch2.png" alt="huginBatch2">
+</div>
+<div class="title">Figure 41. batch processing tool</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_select_sign_to_select_hugin_project">5.2.12. Select + sign to select Hugin project</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginPlus.png" alt="huginPlus">
+</div>
+<div class="title">Figure 42. Add Hugin project to batch process</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_add_hugin_project_file">5.2.13. Add Hugin Project File</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginProject.png" alt="huginProject">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_press_play_to_start_batch">5.2.14. Press Play to Start Batch</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginProject.png" alt="huginProject">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_edited_image_file_saved_to_disk">5.2.15. Edited Image File Saved to Disk</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/hugin/huginFinal.jpg" alt="huginFinal">
+</div>
+<div class="title">Figure 43. Final 360 image after editing and ready for use</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_crop">6. Crop</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Although there are better techniques to get a crop such as using Affinity
+Photo, This technique is useful for a quick crop.</p>
+</div>
+<div class="sect2">
+<h3 id="_original_image_showing_person_in_selfie_style">6.1. Original Image Showing Person in Selfie Style</h3>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/original.jpg" alt="original">
+</div>
+<div class="title">Figure 44. Original image in Hugin</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_use_move_drag_to_view_side_scenery">6.2. Use Move/Drag to View Side Scenery</h3>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/move.jpg" alt="move">
+</div>
+<div class="title">Figure 45. Move orientation to a section you want to crop</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_crop_scene">6.3. Crop Scene</h3>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/crop1.jpg" alt="crop1">
+</div>
+<div class="title">Figure 46. Selection area to crop</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_save_as_flat_jpeg_file">6.4. Save as Flat JPEG File</h3>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/scene1.jpg" alt="scene1">
+</div>
+<div class="title">Figure 47. Cropped scene from 360 image</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_details_of_steps">6.5. Details of Steps</h3>
+<div class="sect3">
+<h4 id="_save_hugin_project_file">6.5.1. Save Hugin Project File</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/save.jpg" alt="save">
+</div>
+<div class="title">Figure 48. Save project file</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_start_batch_processor">6.5.2. Start Batch Processor</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/batch.png" alt="batch">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_load_project_file">6.5.3. Load Project File</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/load.png" alt="load">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_run_batch">6.5.4. Run Batch</h4>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/run.png" alt="run">
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_crops_from_same_image">6.6. Example Crops From Same image</h3>
+<div class="paragraph">
+<p>You can rapidly crop multiple signs out that are the same size.
+This is a fairly quick technique to produce many crops quickly just
+by rotating the sphere and saving the new project file. All three of
+these images are made in a few minutes with the crop technique.
+It might be useful for surveillance, construction, or
+even social media if you reduce the width.</p>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/scene2.jpg" alt="scene2">
+</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/scene3.jpg" alt="scene3">
+</div>
+</div>
+<div class="imageblock thumb">
+<div class="content">
+<img src="img/crop/scene4.jpg" alt="scene4">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metadata">7. metadata</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>RICOH THETA images have
@@ -1163,7 +1692,7 @@ a small tile for the pencil.</p>
 metadata embedded into the image files</p>
 </div>
 <div class="sect2">
-<h3 id="_what_is_metadata">5.1. What is Metadata?</h3>
+<h3 id="_what_is_metadata">7.1. What is Metadata?</h3>
 <div class="paragraph">
 <p>360 images have hidden text embedded into the image data.
 This data is called metadata. It is not designed for humans. A computer reads in the metadata.</p>
@@ -1181,7 +1710,7 @@ or Photoshop.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_why_use_xmp_data">5.2. Why Use XMP Data?</h3>
+<h3 id="_why_use_xmp_data">7.2. Why Use XMP Data?</h3>
 <div class="paragraph">
 <p>Editing the XMP data uses less CPU and memory resources. Your application can
 change the text string for orientation with
@@ -1191,7 +1720,7 @@ the mobile or desktop application.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_what_can_you_edit">5.3. What Can You Edit?</h3>
+<h3 id="_what_can_you_edit">7.3. What Can You Edit?</h3>
 <div class="paragraph">
 <p>You can edit both the XMP data embedded in the THETA image as well as add new
 XMP data tags that comply to the Photo Sphere XMP Metadata standard.
@@ -1201,13 +1730,13 @@ such as Facebook.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_overview_of_functionality_using_facebook_as_viewer">5.4. Overview of Functionality using Facebook as Viewer</h3>
+<h3 id="_overview_of_functionality_using_facebook_as_viewer">7.4. Overview of Functionality using Facebook as Viewer</h3>
 <div class="paragraph">
 <p>This is the same image shown on Facebook with no mouse editing. The
 orientation was changed by only using XMP data strings.</p>
 </div>
 <div class="sect3">
-<h4 id="_default_view_of_image_before_editing">5.4.1. Default View of Image Before Editing</h4>
+<h4 id="_default_view_of_image_before_editing">7.4.1. Default View of Image Before Editing</h4>
 <div class="paragraph">
 <p>The original image looks like this on Facebook with no editing.
 Although Facebook allows you to set the orientation with their Facebook app,
@@ -1218,7 +1747,7 @@ application to support XMP data. Imagine that the mouse is not there.</p>
 <div class="content">
 <img src="img/metadata/default.jpg" alt="default">
 </div>
-<div class="title">Figure 16. default starting view</div>
+<div class="title">Figure 49. default starting view</div>
 </div>
 <div class="paragraph">
 <p>This is the default XMP data that we&#8217;ll edit for our tests.</p>
@@ -1232,7 +1761,7 @@ application to support XMP data. Imagine that the mouse is not there.</p>
 <hr>
 </div>
 <div class="sect3">
-<h4 id="_pose_pitch_increased_by_180_degrees">5.4.2. Pose Pitch Increased by 180 Degrees</h4>
+<h4 id="_pose_pitch_increased_by_180_degrees">7.4.2. Pose Pitch Increased by 180 Degrees</h4>
 <div class="paragraph">
 <p>Here, I&#8217;ll increase the PosePitchDegrees by 180 degrees to illustrate the
 orientation change. Image the camera is upside and you need to correct the image orientation.</p>
@@ -1241,7 +1770,7 @@ orientation change. Image the camera is upside and you need to correct the image
 <div class="content">
 <img src="img/metadata/pitch180.jpg" alt="pitch180">
 </div>
-<div class="title">Figure 17. pitch rotated 180 degrees</div>
+<div class="title">Figure 50. pitch rotated 180 degrees</div>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -1251,7 +1780,7 @@ orientation change. Image the camera is upside and you need to correct the image
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pose_roll_increased_by_180_degrees">5.4.3. Pose Roll Increased by 180 Degrees</h4>
+<h4 id="_pose_roll_increased_by_180_degrees">7.4.3. Pose Roll Increased by 180 Degrees</h4>
 <div class="paragraph">
 <p>In the next example, I&#8217;ve increased the Roll by 180 and reset the Pitch to the default value.
 image::img/metadata/roll180.jpg[role="thumb" title="roll rotated 180 degrees"]</p>
@@ -1264,7 +1793,7 @@ image::img/metadata/roll180.jpg[role="thumb" title="roll rotated 180 degrees"]</
 </div>
 </div>
 <div class="sect3">
-<h4 id="_initialviewheadingdegrees_decreased_by_180">5.4.4. InitialViewHeadingDegrees Decreased by 180</h4>
+<h4 id="_initialviewheadingdegrees_decreased_by_180">7.4.4. InitialViewHeadingDegrees Decreased by 180</h4>
 <div class="paragraph">
 <p>In the next example, I&#8217;ve added a new metadata tag for <em>InitialViewHeadingDegrees</em>.
 I got the name of the tag from the XMP standard. I&#8217;ve rotated the orientation
@@ -1274,7 +1803,7 @@ by 180 degrees to show the back of the image sphere.</p>
 <div class="content">
 <img src="img/metadata/heading180.png" alt="heading180">
 </div>
-<div class="title">Figure 18. initial view heading rotated 180 degrees</div>
+<div class="title">Figure 51. initial view heading rotated 180 degrees</div>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -1286,7 +1815,7 @@ by 180 degrees to show the back of the image sphere.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_metadata_tools">5.5. Metadata Tools</h3>
+<h3 id="_metadata_tools">7.5. Metadata Tools</h3>
 <div class="paragraph">
 <p>There are a number of free tools and libraries to access the metadata.</p>
 </div>
@@ -1307,13 +1836,13 @@ by 180 degrees to show the back of the image sphere.</p>
 <div class="content">
 <img src="img/metadata/exifgui.jpg" alt="exifgui">
 </div>
-<div class="title">Figure 19. ExifToolGUI</div>
+<div class="title">Figure 52. ExifToolGUI</div>
 </div>
 <div class="imageblock thumb">
 <div class="content">
 <img src="img/metadata/exif-data.png" alt="exif data">
 </div>
-<div class="title">Figure 20. metadata viewed with ExifToolGUI</div>
+<div class="title">Figure 53. metadata viewed with ExifToolGUI</div>
 </div>
 <div class="paragraph">
 <p>You can immediately see useful data in the metadata tags. Many sites, including
@@ -1343,7 +1872,7 @@ check for this ratio in case the image was edited incorrectly in post-processing
 <div class="content">
 <img src="img/metadata/xmp_data.png" alt="xmp data">
 </div>
-<div class="title">Figure 21. Exciting THETA XMP Data</div>
+<div class="title">Figure 54. Exciting THETA XMP Data</div>
 </div>
 <div class="paragraph">
 <p>For starters, you can check for the <strong>ProjectionType</strong> of <strong>equirectangular</strong>.
@@ -1386,18 +1915,18 @@ copying the original XMP data and copying over the resized image.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_edit_xmp_data_in_text_file">5.6. Edit XMP Data In Text File</h3>
+<h3 id="_edit_xmp_data_in_text_file">7.6. Edit XMP Data In Text File</h3>
 <div class="imageblock thumb">
 <div class="content">
 <img src="img/metadata/exportXmp.png" alt="exportXmp">
 </div>
-<div class="title">Figure 22. Use ExifToolGui to export XMP data as a text file</div>
+<div class="title">Figure 55. Use ExifToolGui to export XMP data as a text file</div>
 </div>
 <div class="imageblock thumb">
 <div class="content">
 <img src="img/metadata/atomXmp.png" alt="atomXmp">
 </div>
-<div class="title">Figure 23. XMP data can be edited in a text editor like Atom</div>
+<div class="title">Figure 56. XMP data can be edited in a text editor like Atom</div>
 </div>
 <div class="paragraph">
 <p>Import XMP data into THETA image. With the THETA image you want to edit
@@ -1407,18 +1936,18 @@ selected, copy metadata from single file.</p>
 <div class="content">
 <img src="img/metadata/copyMetadata.png" alt="copyMetadata">
 </div>
-<div class="title">Figure 24. Using ExifToolGui, copy metadata from single file into image</div>
+<div class="title">Figure 57. Using ExifToolGui, copy metadata from single file into image</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_exiftool_from_command_line">5.7. Exiftool from command line</h3>
+<h3 id="_exiftool_from_command_line">7.7. Exiftool from command line</h3>
 <div class="paragraph">
 <p>You can read and edit the XMP data directly from the command line. In the
 examples below, I&#8217;m using a bash shell on Windows. Many people use
 a bash script to control exiftool</p>
 </div>
 <div class="sect3">
-<h4 id="_reading_data">5.7.1. Reading Data</h4>
+<h4 id="_reading_data">7.7.1. Reading Data</h4>
 <div class="literalblock">
 <div class="content">
 <pre>$ ./exiftool.exe edited_image.jpg &gt; data.txt
@@ -1539,7 +2068,7 @@ Light Value                     : 9.0</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_writing_data">5.8. Writing Data</h3>
+<h3 id="_writing_data">7.8. Writing Data</h3>
 <div class="literalblock">
 <div class="content">
 <pre>$ ./exiftool.exe -InitialViewHeadingDegrees=45 edited_image.jpg
@@ -1548,9 +2077,9 @@ Light Value                     : 9.0</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_grab_xmp_data_with_node">5.9. Grab XMP Data with Node</h3>
+<h3 id="_grab_xmp_data_with_node">7.9. Grab XMP Data with Node</h3>
 <div class="sect3">
-<h4 id="_script">5.9.1. Script</h4>
+<h4 id="_script">7.9.1. Script</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="javascript"><table class="CodeRay"><tr>
@@ -1598,7 +2127,7 @@ Light Value                     : 9.0</pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_output">5.9.2. Output</h4>
+<h4 id="_output">7.9.2. Output</h4>
 <div class="literalblock">
 <div class="content">
 <pre>$ node nodeMagick.js original.jpg
@@ -1618,7 +2147,7 @@ Light Value                     : 9.0</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_zero_out_xmp_data_with_theta_desktop_application">5.10. Zero Out XMP Data with THETA Desktop Application</h3>
+<h3 id="_zero_out_xmp_data_with_theta_desktop_application">7.10. Zero Out XMP Data with THETA Desktop Application</h3>
 <div class="paragraph">
 <p>The THETA desktop application can be used to zero out the pitch and roll so that
 your image editing application does not get confused. Problems occur
@@ -1630,7 +2159,7 @@ editing.</p>
 <div class="content">
 <img src="img/metadata/xmp_theta_app.png" alt="xmp theta app">
 </div>
-<div class="title">Figure 25. Official THETA Desktop Application saving XMP data</div>
+<div class="title">Figure 58. Official THETA Desktop Application saving XMP data</div>
 </div>
 <div class="paragraph">
 <p>After the correction, the XMP data for pitch and roll will be zeroed out.</p>
@@ -1639,7 +2168,7 @@ editing.</p>
 <div class="content">
 <img src="img/metadata/zero-out.png" alt="zero out">
 </div>
-<div class="title">Figure 26. Pitch and Roll are zeroed out by the THETA app</div>
+<div class="title">Figure 59. Pitch and Roll are zeroed out by the THETA app</div>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1657,7 +2186,7 @@ to all images.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_libraries">5.11. Libraries</h3>
+<h3 id="_libraries">7.11. Libraries</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1677,7 +2206,7 @@ A fast EXIF data extractor for .NET by Simon McKenzie</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_end_user_tools">5.12. End User Tools</h3>
+<h3 id="_end_user_tools">7.12. End User Tools</h3>
 <div class="paragraph">
 <p>These tools are for digital artists and support the XMP tags. Many other tools
 support the metadata tags.</p>
@@ -1696,44 +2225,7 @@ support the metadata tags.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_specification">6. Specification</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The RICOH THETA S and THETA SC take images in two different sizes: 5376x2688
-and 2048x1024. The application you build can also resize the images
-to any width and height that is in a 2:1 ratio.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The image must be in a ratio of 2:1.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>dual-fisheye</p>
-</div>
-<div class="sect2">
-<h3 id="_stitching">6.1. Stitching</h3>
-<div class="paragraph">
-<p>Equirectangular.</p>
-</div>
-<div class="paragraph">
-<p>RICOH THETA lens distortion data.</p>
-</div>
-<div class="paragraph">
-<p>Sony PlayStation VR Media Player</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sample_application">7. Sample Application</h2>
+<h2 id="_sample_application">8. Sample Application</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The sample application
@@ -1765,7 +2257,7 @@ install guide to using my script. I hope it helps speed up people&#8217;s
 Theta S workflow.</p>
 </div>
 <div class="sect2">
-<h3 id="_install">7.1. Install</h3>
+<h3 id="_install">8.1. Install</h3>
 <div class="paragraph">
 <p>Download, fork or copy paste the script from
 <a href="https://github.com/khufkens/theta_rectify">my github repository</a> to your machine
@@ -1778,7 +2270,7 @@ and make it executable.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_use">7.2. Use</h3>
+<h3 id="_use">8.2. Use</h3>
 <div class="literalblock">
 <div class="content">
 <pre>$ theta_rectify.sh image.jpg</pre>
@@ -1791,13 +2283,13 @@ and make it executable.</p>
 <div class="content">
 <img src="img/sampleapp/original.jpg" alt="original">
 </div>
-<div class="title">Figure 27. Original Image</div>
+<div class="title">Figure 60. Original Image</div>
 </div>
 <div class="imageblock thumb">
 <div class="content">
 <img src="img/sampleapp/rectified.jpg" alt="rectified">
 </div>
-<div class="title">Figure 28. rectified image</div>
+<div class="title">Figure 61. rectified image</div>
 </div>
 <div class="paragraph">
 <p>Visual comparison between my results and those of
@@ -1806,7 +2298,7 @@ show good correspondence.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_requirements">7.3. Requirements</h3>
+<h3 id="_requirements">8.3. Requirements</h3>
 <div class="paragraph">
 <p>The script depends on a running copy of exiftools, imagemagick and POVRay.
 These tools are commonly available in most Linux distros, and can be
@@ -1815,7 +2307,7 @@ but the script should be easily adjusted to cover similar functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_code">7.4. Code</h3>
+<h3 id="_code">8.4. Code</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="bash"><table class="CodeRay"><tr>
@@ -1953,7 +2445,7 @@ but the script should be easily adjusted to cover similar functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_explanation">7.5. Explanation</h3>
+<h3 id="_explanation">8.5. Explanation</h3>
 <div class="paragraph">
 <p>This section added by Craig.</p>
 </div>
@@ -2047,118 +2539,10 @@ four units wide.</p>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_povray">8. Povray</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This shows image adjustment with Povray.</p>
-</div>
-<div class="sect2">
-<h3 id="__pov_configuration_file">8.1. .pov configuration file</h3>
-<div class="literalblock">
-<div class="content">
-<pre>#include "colors.inc"
-#include "shapes.inc"</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>camera {
-spherical
-}</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>sphere {
-  // center of sphere
-  &lt;0,0,0&gt;, 1
-  texture {
-    pigment {
-      image_map {
-        jpeg "museum.jpg"
-        interpolate 2
-        once
-        map_type 1</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>    }
-   }
-   rotate z * 90
-   // rotate x * 90
-   finish { ambient 1}
-}
-}</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_command_line">8.2. command line</h3>
-<div class="literalblock">
-<div class="content">
-<pre>$ povray +W5376 +H2688 +fj  thetasphere.pov +Othetaspherez90.jpg</pre>
-</div>
-</div>
-<div class="imageblock thumb">
-<div class="content">
-<img src="img/povray/original.jpg" alt="original">
-</div>
-<div class="title">Figure 29. original image</div>
-</div>
-<div class="imageblock thumb">
-<div class="content">
-<img src="img/povray/x90.jpg" alt="x90">
-</div>
-<div class="title">Figure 30. x rotated 90 degrees</div>
-</div>
-<div class="imageblock thumb">
-<div class="content">
-<img src="img/povray/x90view.png" alt="x90view">
-</div>
-<div class="title">Figure 31. view in THETA desktop app with x rotation</div>
-</div>
-<div class="imageblock thumb">
-<div class="content">
-<img src="img/povray/z90.jpg" alt="z90">
-</div>
-<div class="title">Figure 32. z rotated 90 degrees</div>
-</div>
-<div class="imageblock thumb">
-<div class="content">
-<img src="img/povray/z90view.png" alt="z90view">
-</div>
-<div class="title">Figure 33. view in THETA desktop app with z rotation</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_platforms">9. Platforms</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_aframe">9.1. aframe</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_google_vr">9.2. Google VR</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_unity">9.3. Unity</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_web_sites">9.4. Web sites</h3>
-
-</div>
-</div>
-</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-06-02 13:35:01 PDT
+Last updated 2017-06-02 17:29:49 PDT
 </div>
 </div>
 </body>

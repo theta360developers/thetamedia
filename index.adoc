@@ -20,7 +20,9 @@ ga('set', 'contentGroup1', 'All RICOH');
 
 This document is being created to replace the
 http://theta360.guide/community-document/community.html[Unofficial Media Guide].
-At the time of writing, the THETA S is the newest model.
+At the time of writing, the THETA S is the newest model. If you're looking for
+information in the previous media guide. It's still
+http://theta360.guide/community-document/community.html[here]
 
 Post comments and corrections to <http://lists.theta360.guide> in a public
 category or direct message
@@ -49,6 +51,7 @@ https://developers.google.com/streetview/open-spherical-camera/[Open Spherical C
 
 * http://theta360.guide/community-document/live-streaming.html[Live Streaming Guide]
 * http://lists.theta360.guide/[Community Discussion]
+* http://theta360.guide/community-document/community.html[Old Media Guide]
 
 // begin overview section
 
@@ -58,14 +61,16 @@ include::resize.adoc[]
 
 include::color.adoc[]
 
+include::orientation.adoc[]
+
+include::crop.adoc[]
+
 // begin metadata section
 
 include::metadata.adoc[]
 
-include::specification.adoc[]
+// include::specification.adoc[]
 
 include::sampleApp.adoc[]
 
-include::povray.adoc[]
-
-include::platform.adoc[]
+// include::platform.adoc[]
