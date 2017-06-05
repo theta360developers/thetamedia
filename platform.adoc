@@ -1,6 +1,33 @@
-== Platforms
+== Web, Headset, and Mobile Platforms
 
-=== aframe
+In addition to social media networks like Facebook, Google Street View,
+there are a number of tools, frameworks and platforms to share
+THETA images and video.
+
+I'll divide the application into three categories:
+
+1. WebVR (Experimental)
+2. Unity
+3. JavaScript libraries
+
+=== WebVR
+
+WebVR is an experimental specification for JavaScript APIs. For a status update on WebVR, go to
+https://webvr.info/[webvr.info]
+
+==== aframe
+A-Frame works on web, mobile, and headsets. It's one of the leading
+open source frameworks for WebVR.
+
+You can test a THETA 360 Image Gallery by pointing your phone in landscape
+mode to https://360gallery.glitch.me[the sample app]
+
+image::img/platform/gallery1.png[role="thumb" title="A-Frame Gallery"]
+
+
+image::img/platform/gallery2.png[role="thumb" title="A-Frame Gallery"]
+
+
 === Google VR
 === Unity
 === Web sites
