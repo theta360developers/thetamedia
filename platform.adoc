@@ -20,7 +20,7 @@ A-Frame works on web, mobile, and headsets. It's one of the leading
 open source frameworks for WebVR.
 
 You can test a THETA 360 Image Gallery by pointing your phone in landscape
-mode to https://360gallery.glitch.menew[the sample app]
+mode to https://360gallery.glitch.me[the sample app]
 
 image::img/platform/gallery1.png[role="thumb" title="A-Frame Gallery"]
 
