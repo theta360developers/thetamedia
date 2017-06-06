@@ -35,23 +35,45 @@ The example uses Glitch, a collaboration platform for coding web applications.
 
 Copy 3 images from your camera to a folder on your computer.
 
+image::img/platform/glitchAssets.png[role="thumb" title="Copy THETA images into Glitch assets area"]
+
+
 *2. Remix Gallery Application on Glitch*
 
 Go to Glitch https://glitch.com/edit/#!/360gallery[here].
 
+
 Press _Remix_ to make your own copy of the files.
 
+
 image::img/platform/glitchRemix.png[role="thumb" title="Copying code on Glitch for editing"]
+
+After the remix, your site will have a new name.
+
+
+image::img/platform/glitchRemixName.png[role="thumb" title="You will have a new name for your remix"]
+
 
 *3. Upload THETA Images to Glitch*
 
 Under the assets area, drag and drop your THETA images.
 
-*4.
+*4. Click on the image to get the URL*
+
+image::img/platform/glitchUrl.png[role="thumb" title="get the Glitch asset URL"]
+
+*5. Copy URL Into HTML File*
+
+In the HTML, change the src of the first image, line 18.
+
+  <body>
+    <a-scene>
+      <a-assets>
+        <!-- Sky -->
+        <img id="theta1" crossorigin="anonymous" src="https://cdn.glitch.com/de58ff4a-64df-46b4-9983-c0172a9bcef0%2FR0011815.JPG?1496785202158">
 
 NOTE: optional step is to upload menu pictures. The menus are 240x240 pixel images.
 
-image::img/platform/glitchAssets.png[role="thumb" title="Copy THETA images into Glitch assets area"]
 
 
 
