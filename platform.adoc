@@ -35,7 +35,6 @@ The example uses Glitch, a collaboration platform for coding web applications.
 
 Copy 3 images from your camera to a folder on your computer.
 
-image::img/platform/glitchAssets.png[role="thumb" title="Copy THETA images into Glitch assets area"]
 
 
 *2. Remix Gallery Application on Glitch*
@@ -57,6 +56,9 @@ image::img/platform/glitchRemixName.png[role="thumb" title="You will have a new 
 *3. Upload THETA Images to Glitch*
 
 Under the assets area, drag and drop your THETA images.
+
+image::img/platform/glitchAssets.png[role="thumb" title="Copy THETA images into Glitch assets area"]
+
 
 *4. Click on the image to get the URL*
 
