@@ -27,16 +27,29 @@ image::img/platform/gallery1.png[role="thumb" title="A-Frame Gallery"]
 
 image::img/platform/gallery2.png[role="thumb" title="A-Frame Gallery"]
 
+===== Tutorial to Build A-Frame Application with Glitch
+
 The example uses Glitch, a collaboration platform for coding web applications.
-You can copy and edit the files
-https://glitch.com/edit/#!/360gallery[here].
+
+*1. Organize 3 Images for gallery*
+
+Copy 3 images from your camera to a folder on your computer.
+
+*2. Remix Gallery Application on Glitch*
+
+Go to Glitch https://glitch.com/edit/#!/360gallery[here].
 
 Press _Remix_ to make your own copy of the files.
 
 image::img/platform/glitchRemix.png[role="thumb" title="Copying code on Glitch for editing"]
 
-Under the assets area, drag and drop your THETA images and menu pictures. The
-menus are 240x240 pixel images.
+*3. Upload THETA Images to Glitch*
+
+Under the assets area, drag and drop your THETA images.
+
+*4.
+
+NOTE: optional step is to upload menu pictures. The menus are 240x240 pixel images.
 
 image::img/platform/glitchAssets.png[role="thumb" title="Copy THETA images into Glitch assets area"]
 
