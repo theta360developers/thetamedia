@@ -1,4 +1,4 @@
-== Web, Headset, and Mobile Platforms
+== Distribute 360 Application
 
 In addition to social media networks like Facebook, Google Street View,
 there are a number of tools, frameworks and platforms to share
@@ -68,14 +68,57 @@ image::img/platform/glitchUrl.png[role="thumb" title="get the Glitch asset URL"]
 
 In the HTML, change the src of the first image, line 18.
 
+[source, javascript]
+----
   <body>
     <a-scene>
       <a-assets>
         <!-- Sky -->
         <img id="theta1" crossorigin="anonymous" src="https://cdn.glitch.com/de58ff4a-64df-46b4-9983-c0172a9bcef0%2FR0011815.JPG?1496785202158">
+----
 
-NOTE: optional step is to upload menu pictures. The menus are 240x240 pixel images.
+*6. Copy URL for Next 2 Images*
 
+Repeat the process above for the next 2 files on lines 23 and 24.
+
+image::img/platform/glitchUrl23.png[role="thumb" title="Copy Glitch asset URL for next 2 files"]
+
+*7. View Live Site*
+
+Press _Show_ in the upper left corner
+
+image::img/platform/glitchShow.png[role="thumb" title="Press Show to view site"]
+
+Glitch will open up a new browser.
+
+image::img/platform/glitchView.png[role="thumb" title="Your THETA Gallery in a new browser"]
+
+*8. Share on Facebook*
+
+Grab the link from your browser to share on Facebook.
+
+Example: https://ablaze-bike.glitch.me/
+
+image::img/platform/glitchFB.png[role="thumb" title="THETA Gallery preview will automatically appear in Facebook."]
+
+*9. Modify Code*
+
+A good next step is to upload menu pictures. The menus are 240x240 pixel images.
+
+image::img/platform/glitchModify.png[role="thumb" title="Remix code to change menus or functionality"]
+
+image::img/platform/glitchModify2.png[role="thumb" title="use thumbnails as the menus"]
+
+*10. Use in Cardboard*
+Put the URL into Google Chrome on your phone and put your phone into
+Google Cardboard.
+
+image::img/platform/vr.png[role="thumb" title="head tracking works in Cardboard"]
+
+
+
+
+https://glitch.com/edit/#!/frill-broccoli[Remix]
 
 
 
